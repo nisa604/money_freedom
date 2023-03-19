@@ -40,6 +40,7 @@ dependencies:
   calendar_appbar: ^0.0.6
   filter_list: ^1.0.2
   sqflite: ^2.2.4+1
+  image_picker: ^0.8.7
 
 dev_dependencies:
   flutter_test:
