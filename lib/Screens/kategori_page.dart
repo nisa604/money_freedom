@@ -8,6 +8,7 @@ class kategori_page extends StatefulWidget {
 }
 
 class _kategori_pageState extends State<kategori_page> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,12 +19,39 @@ class _kategori_pageState extends State<kategori_page> {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // handle the press
+              openDialog();
             },
           ),
         ],
       ),
-
     );
   }
+
+  Future<String?> openDialog() => showDialog<String?>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Buat Kategori'),
+      content: const TextField(
+        // controller: controller,
+        autofocus: true,
+        decoration: InputDecoration(
+            hintText: 'Masukan Nama Kategori'
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          child: const Text('Batal'),
+        ),
+        TextButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          child: const Text('Simpan'),
+        ),
+      ],
+    ),
+  );
 }
