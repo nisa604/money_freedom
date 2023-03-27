@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moneyfreedom/src/app.dart';
 
 class about_page extends StatelessWidget {
   const about_page({Key? key}) : super(key: key);

@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyfreedom/list/MonthList.dart';
 import 'package:filter_list/filter_list.dart';
+import 'package:moneyfreedom/database/DataPengeluaranService.dart';
+
+import 'create_transaction.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,6 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedItem = 'Januari';
   List<String> Pilihan = ['Harian', 'Bulanan', 'Tahunan', 'Custom'];
   String? selected = '';
+
+  DataPengeluaranService _dataPengeluaranService = DataPengeluaranService();
 
   @override
   Widget build(BuildContext context) {
@@ -136,100 +142,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-
-              // text transaksi Bulan
-              // DecoratedBox(
-              //     decoration: BoxDecoration(color: Colors.transparent),
-              //     child: Padding(
-              //       padding: EdgeInsets.only(left: 15),
-              //       child: DropdownButton<String>(
-              //         value: selectedItem,
-              //         items: Bulan.map((month) => DropdownMenuItem<String>(
-              //               value: month,
-              //               child: Text(month, style: TextStyle(fontSize: 18)),
-              //             )).toList(),
-              //         onChanged: (Bulan) => setState(() => selectedItem = Bulan),
-              //         icon: Padding(
-              //             padding: EdgeInsets.zero, child: Icon(Icons.list)),
-              //       ),
-              //     )),
-
-              //pilihan bulan atau harian
-              // DecoratedBox(
-              //     decoration: BoxDecoration(color: Colors.transparent),
-              //     child: Padding(
-              //       padding: EdgeInsets.only(left: 15),
-              //       child: DropdownButton<String>(
-              //         value: selected,
-              //         items: Pilihan.map((pilih) => DropdownMenuItem<String>(
-              //               value: pilih,
-              //               child: Text(pilih),
-              //             )).toList(),
-              //         onChanged: (Pilihan) => setState(() => selected = Pilihan),
-              //         icon: Padding(
-              //             padding: EdgeInsets.zero, child: Icon(Icons.list)),
-              //       ),
-              //     )),
-
-              // Padding(
-              // padding: const EdgeInsets.symmetric(horizontal: 8),
-              // child: Card(
-              //     elevation: 8,
-              //     child: ListTile(
-              //       trailing: Row(
-              //         mainAxisSize: MainAxisSize.min,
-              //         children: [
-              //           IconButton(
-              //               // alignment: AlignmentDirectional.centerStart,
-              //               onPressed: () {
-              //                 // Route menu ke halaman utama
-              //                 //   Navigator.pushReplacement(
-              //                 //       context,
-              //                 //       MaterialPageRoute(
-              //                 //           builder: (context) => const monthlist()));
-              //               },
-              //               icon: Icon(Icons.list)),
-              //           DropdownButton<String>(
-              //             value: selectedItem,
-              //             items: Bulan.map((month) => DropdownMenuItem<String>(
-              //                   value: month,
-              //                   child: Text(month, style: TextStyle(fontSize: 8)),
-              //                 )).toList(),
-              //             onChanged: (Bulan) =>
-              //                 setState(() => selectedItem = Bulan),
-              //           )
-              //           // SizedBox(width: 5)
-              //         ],
-              //       ),
-              //       title: Text(
-              //         "Februari",
-              //         style: GoogleFonts.montserrat(),
-              //       ),
-              //     )),
-              // ),
-
               //list transaksi
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Card(
-                  elevation: 10,
-                  child: ListTile(
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                      ],
-                    ),
-                    title: Text("Rp 2.000.000"),
-                    subtitle: Text("Bayar kos"),
-                    leading: Container(
-                      child: Icon(Icons.upload, color: Colors.red),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
-                  ),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: DataPengeluaranService().dataPengeluaranStream,
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Terjadi kesalahan saat memuat data');
+                    }
+                    
+                    if (!snapshot.hasData) {
+                      return Text('Belum ada data pengeluaran');
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final pengeluaran = snapshot.data!.docs[index];
+
+                        return Card(
+                          elevation: 10,
+                          child: ListTile(
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(onPressed: () async {
+                                  await _dataPengeluaranService.hapusPengeluaran(pengeluaran.id); // menghapus data dari Firestore
+                                  setState((){}); // memperbarui tampilan setelah data dihapus
+                                }, icon: Icon(Icons.delete)),
+                                IconButton(onPressed: () => Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context)=>CreateTransaction())), 
+                                icon: Icon(Icons.edit)),
+                              ],
+                            ),
+                            title: Text("Rp ${pengeluaran['jumlah']}"),
+                            subtitle: Text(pengeluaran['kategori']),
+                            leading: Container(
+                              child: Icon(Icons.upload, color: Colors.red),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
 
