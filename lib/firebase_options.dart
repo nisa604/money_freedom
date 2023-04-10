@@ -23,7 +23,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -47,33 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBnpyQtzlGyVUYM3emzX36c5thLPILkAj0',
-    appId: '1:417563716591:web:96d044ec8016909116641a',
-    messagingSenderId: '417563716591',
-    projectId: 'ndattempt-af437',
-    authDomain: 'ndattempt-af437.firebaseapp.com',
-    databaseURL: 'https://ndattempt-af437-default-rtdb.firebaseio.com',
-    storageBucket: 'ndattempt-af437.appspot.com',
-    measurementId: 'G-ELZEHH8S0F',
+    apiKey: 'AIzaSyDF8KMn5-wrlp1AOsJ7u64uMLrDbyeaDdQ',
+    appId: '1:466521881954:web:cbea8fc9a7b37a7e2b003b',
+    messagingSenderId: '466521881954',
+    projectId: 'proyek4-8d032',
+    authDomain: 'proyek4-8d032.firebaseapp.com',
+    storageBucket: 'proyek4-8d032.appspot.com',
+    measurementId: 'G-FVDTCGS4KB',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDoYlgBn73CqyTKggh98mX-HobjF2J77Eg',
-    appId: '1:417563716591:android:97f9b430a7d8a88216641a',
-    messagingSenderId: '417563716591',
-    projectId: 'ndattempt-af437',
-    databaseURL: 'https://ndattempt-af437-default-rtdb.firebaseio.com',
-    storageBucket: 'ndattempt-af437.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyATcBWVnS9CT7zjH-xL5EAzeptur3KwrxY',
-    appId: '1:417563716591:ios:650da9ed3228a0d816641a',
-    messagingSenderId: '417563716591',
-    projectId: 'ndattempt-af437',
-    databaseURL: 'https://ndattempt-af437-default-rtdb.firebaseio.com',
-    storageBucket: 'ndattempt-af437.appspot.com',
-    iosClientId: '417563716591-dlmug07tm5nlea4q4g8ibbir3nkf0cnk.apps.googleusercontent.com',
-    iosBundleId: 'com.example.moneyfreedom',
+    apiKey: 'AIzaSyAW6UnBMBsn2BGQ9zw-i5ESHHkji_zCJHs',
+    appId: '1:466521881954:android:b7dbd6057f425c562b003b',
+    messagingSenderId: '466521881954',
+    projectId: 'proyek4-8d032',
+    storageBucket: 'proyek4-8d032.appspot.com',
   );
 }
