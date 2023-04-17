@@ -1,3 +1,9 @@
+/**
+ * @Author: Your name
+ * @Date:   2023-04-04 11:24:59
+ * @Last Modified by:   Your name
+ * @Last Modified time: 2023-04-17 06:51:49
+ */
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:moneyfreedom/Screens//analyst_page.dart';
@@ -42,49 +48,20 @@ class MenuButtonState extends State<MenuButton> {
             //  Icon(Icons.favorite),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.search)
-              ),
+              child: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
             ),
-            //   Icon(Icons.more_vert),
           ],
+
           backgroundColor: Colors.blue,
         ),
         drawer: const DrawerNavigation(
           width: 100,
         ),
-
-        // appBar: AppBar(
-        //   title: const Text('MoneyFreedom'),
-        // ),
-
-        // appBar: (currentIndex == 0)
-        //     ? CalendarAppBar(
-        //         backButton: false, //menghilangkan back button
-        //         locale: 'id', //bahasa indonesia ata bisa bahasa lain
-        //         onDateChanged: (value) => print(value),
-        //         firstDate: DateTime.now().subtract(Duration(days: 140)),
-        //         lastDate: DateTime.now(),
-        //       )
-        //     : PreferredSize(
-        //         //untuk membatasi ada dimana, klo di home ada sedangkan di categori ga ada
-        //         child: Padding(
-        //           padding:
-        //               const EdgeInsets.symmetric(vertical: 36, horizontal: 16),
-        //           child: Container(
-        //             child: Text(
-        //               'Category',
-        //               style: GoogleFonts.montserrat(fontSize: 18),
-        //             ),
-        //           ),
-        //         ),
-        //         preferredSize: Size.fromHeight(100)),
         floatingActionButton: Visibility(
           visible: (currentIndex == 0) ? true : false,
           child: FloatingActionButton(
-            onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context)=>CreateTransaction())),
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CreateTransaction())),
             backgroundColor: Colors.blueAccent,
             child: Icon(Icons.add),
           ),
@@ -94,27 +71,21 @@ class MenuButtonState extends State<MenuButton> {
         bottomNavigationBar: BottomAppBar(
           color: Colors.blue,
           child:
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      ontaptapped(0);
-                    },
-                    icon: const Icon(Icons.home)
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                IconButton(
-                    onPressed: () {
-                      ontaptapped(1);
-                    },
-                    icon: const Icon(Icons.bar_chart)
-                )
-              ]
-          ),
-        )
-    );
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            IconButton(
+                onPressed: () {
+                  ontaptapped(0);
+                },
+                icon: const Icon(Icons.home)),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+                onPressed: () {
+                  ontaptapped(1);
+                },
+                icon: const Icon(Icons.bar_chart))
+          ]),
+        ));
   }
 }
