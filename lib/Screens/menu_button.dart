@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:moneyfreedom/Screens//analyst_page.dart';
 import 'package:moneyfreedom/Screens/home_screen.dart';
-import 'package:moneyfreedom/Screens/create_transaction.dart';
+import 'package:moneyfreedom/Screens/create_transaction_pengeluaran.dart';
 import 'package:moneyfreedom/Sidebar/drawer_navigation.dart';
 
 class MenuButton extends StatefulWidget {
@@ -84,7 +84,7 @@ class MenuButtonState extends State<MenuButton> {
           visible: (currentIndex == 0) ? true : false,
           child: FloatingActionButton(
             onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context)=>CreateTransaction())),
+                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPengeluaran())),
             backgroundColor: Colors.blueAccent,
             child: Icon(Icons.add),
           ),
