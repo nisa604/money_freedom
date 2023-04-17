@@ -35,6 +35,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  animated_splash_screen:
+
   intl: ^0.17.0
 
   # The following adds the Cupertino Icons font to your application.
@@ -45,8 +47,13 @@ dependencies:
   filter_list: ^1.0.2
   sqflite: ^2.2.4+1
   image_picker: ^0.8.7
+<<<<<<< HEAD
   firebase_core: ^2.8.0
   cloud_firestore: ^4.5.0
+=======
+  firebase_core: ^2.9.0
+  cloud_firestore: ^4.4.5
+>>>>>>> 49087f66c3f270cb5d5e16d50ce6b04c7536066c
   firebase_storage: ^11.0.16
   pie_chart: ^5.3.2
 

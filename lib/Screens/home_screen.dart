@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:moneyfreedom/list/MonthList.dart';
-import 'package:filter_list/filter_list.dart';
+import 'package:intl/intl.dart';
 import 'package:moneyfreedom/database/DataPengeluaranService.dart';
 import 'package:moneyfreedom/database/DataPemasukanService.dart';
 
-import 'create_transaction.dart';
+import 'create_transaction_pemasukan.dart';
+import 'create_transaction_pengeluaran.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -176,11 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   setState((){}); // memperbarui tampilan setelah data dihapus
                                 }, icon: Icon(Icons.delete)),
                                 IconButton(onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>CreateTransaction())), 
+                                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPengeluaran())),
                                 icon: Icon(Icons.edit)),
                               ],
                             ),
-                            title: Text("Rp ${pengeluaran['jumlah']}"),
+                            // title: Text("Rp ${pengeluaran['jumlah']}"),
+                              title: Text("Rp ${NumberFormat.decimalPattern('id_ID').format(pengeluaran['jumlah'])}"),
                             subtitle: Text(pengeluaran['kategori']),
                             leading: Container(
                               child: Icon(Icons.upload, color: Colors.red),
@@ -228,14 +227,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   setState((){}); // memperbarui tampilan setelah data dihapus
                                 }, icon: Icon(Icons.delete)),
                                 IconButton(onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>CreateTransaction())), 
+                                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPemasukan())),
                                 icon: Icon(Icons.edit)),
                               ],
                             ),
-                            title: Text("Rp ${Pemasukan['jumlahPemasukan']}"),
+                            // title: Text("Rp ${Pemasukan['jumlahPemasukan']}"),
+                            title: Text("Rp ${NumberFormat.decimalPattern('id_ID').format(Pemasukan['jumlahPemasukan'])}"),
                             subtitle: Text(Pemasukan['kategoriPemasukan']),
                             leading: Container(
-                              child: Icon(Icons.upload, color: Colors.red),
+                              child: Icon(Icons.download, color: Colors.green),
                               decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8)),
@@ -250,20 +250,5 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           )),
     );
-
-    // return Scaffold(
-    //   backgroundColor: Colors.grey.shade200,
-    //   appBar: AppBar(
-    //     title: const Text('MoneyFreedom'),
-    //   ),
-    //   drawer: const DrawerNavigation(
-    //       width: 100,
-    //   ),
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: () => Navigator.of(context)
-    //       .push(MaterialPageRoute(builder: (context)=>CreateTransaction())),
-    //     child : Icon(Icons.add),
-    //   ),
-    // );
   }
 }
