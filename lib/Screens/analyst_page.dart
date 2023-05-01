@@ -5,7 +5,6 @@
  * @Last Modified time: 2023-04-10 08:16:19
  */
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 
@@ -52,8 +51,8 @@ class AnalystPage extends StatelessWidget {
           ),
           Column(
             children: <Widget>[
-              Text('Column Child 1'),
-              Text('Column Child 2'),
+              // Text('Column Child 1'),
+              // Text('Column Child 2'),
             ],
           ),
         ],
