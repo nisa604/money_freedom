@@ -2,7 +2,7 @@
  * @Author: Your name
  * @Date:   2023-04-04 11:24:59
  * @Last Modified by:   Your name
- * @Last Modified time: 2023-04-10 08:16:19
+ * @Last Modified time: 2023-05-07 20:09:10
  */
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -34,13 +34,13 @@ class AnalystPage extends StatelessWidget {
           Expanded(
             child: Container(
               child: SizedBox(
-                height: 10,
+                height: 13,
                 // // width: 100,
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: PieChart(
                   dataMap: dataMap,
-                  chartType: ChartType.ring,
-                  baseChartColor: Colors.grey[50]!.withOpacity(0.1),
+                  chartType: ChartType.disc,
+                  baseChartColor: Colors.grey[100]!.withOpacity(0.5),
                   colorList: colorList,
                   chartValuesOptions: ChartValuesOptions(
                     showChartValuesInPercentage: true,
@@ -51,10 +51,7 @@ class AnalystPage extends StatelessWidget {
             ),
           ),
           Column(
-            children: <Widget>[
-              Text('Column Child 1'),
-              Text('Column Child 2'),
-            ],
+            children: [Container()],
           ),
         ],
       ),
