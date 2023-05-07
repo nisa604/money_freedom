@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneyfreedom/Screens/create_transaction_pengeluaran.dart';
-import 'package:moneyfreedom/Screens/kategori_page.dart';
+import 'package:moneyfreedom/Screens/kategori_pemasukan.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moneyfreedom/database/DataPemasukanService.dart';
@@ -216,7 +216,7 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                         Expanded(
                           child: IconButton(
                               onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>kategori_page())),
+                                  .push(MaterialPageRoute(builder: (context)=>const kategori_pemasukan())),
                               icon: const Icon(Icons.create_outlined, size: 28,)
                           ),
                         ),

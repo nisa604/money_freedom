@@ -2,7 +2,7 @@
  * @Author: Your name
  * @Date:   2023-04-04 11:24:59
  * @Last Modified by:   Your name
- * @Last Modified time: 2023-04-17 06:51:49
+ * @Last Modified time: 2023-04-23 21:40:19
  */
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -39,13 +39,8 @@ class MenuButtonState extends State<MenuButton> {
           //automaticallyImplyLeading: false, // simple as that!
           toolbarHeight: 75, // default is 56
           toolbarOpacity: 0.5,
-          // leading: IconButton(
-          //     onPressed: () {},
-          //     icon: Icon(Icons.menu)
-          // ),
-          // title: Text('Page title'),
+
           actions: [
-            //  Icon(Icons.favorite),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: IconButton(onPressed: () {}, icon: Icon(Icons.search)),
@@ -60,13 +55,8 @@ class MenuButtonState extends State<MenuButton> {
         floatingActionButton: Visibility(
           visible: (currentIndex == 0) ? true : false,
           child: FloatingActionButton(
-<<<<<<< HEAD
-            onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => CreateTransaction())),
-=======
-            onPressed: () => Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPengeluaran())),
->>>>>>> 49087f66c3f270cb5d5e16d50ce6b04c7536066c
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CreateTransactionPengeluaran())),
             backgroundColor: Colors.blueAccent,
             child: Icon(Icons.add),
           ),
