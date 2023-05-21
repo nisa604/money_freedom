@@ -45,6 +45,8 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
 
   List<String> list = ['Magang', 'Orang Tua'];
   late String dropDownValue = list.first;
+  String SelectedKategori = "0";
+
   DataPemasukanService _dataPemasukanService = DataPemasukanService();
 
   File? image;
@@ -117,6 +119,10 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         title: const Text('Transaksi'),
+        leading: BackButton(
+          onPressed: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context)=>MenuButton())),
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -141,7 +147,7 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                       backgroundColor: Colors.grey.shade300,
                       minimumSize: const Size(185, 40),
                     ),
-                    child: const Text("pengeluaran",
+                    child: const Text("pemasukan",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -187,7 +193,10 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                             borderRadius: BorderRadius.circular(10),
                           ),
                           labelText: 'Jumlah',
-                          hintText: 'Masukan Jumlah Uang'
+                          hintText: 'Masukan Jumlah Uang',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                       ),
                     ),
                   ),
@@ -195,23 +204,66 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                     margin: const EdgeInsets.fromLTRB(15, 20, 15, 20),
                     child: Row(
                       children: [
-                        Expanded(flex: 8,child: DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          value: dropDownValue,
-                          items: list.map<DropdownMenuItem<String>>((String value){
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          hint: const Text('Kategori'),
-                          onChanged: (String? value){
-                          },
-                        ),
+                        // Expanded(flex: 8,child: DropdownButtonFormField(
+                        //   decoration: InputDecoration(
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(10),
+                        //     ),
+                        //   ),
+                        //   value: dropDownValue,
+                        //   items: list.map<DropdownMenuItem<String>>((String value){
+                        //     return DropdownMenuItem<String>(
+                        //       value: value,
+                        //       child: Text(value),
+                        //     );
+                        //   }).toList(),
+                        //   hint: const Text('Kategori'),
+                        //   onChanged: (String? value){
+                        //   },
+                        // ),
+                        // ),
+                        Expanded(flex: 8,child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance.collection('KategoriPemasukan').snapshots(),
+                            builder: (context, snapshot) {
+                              List<DropdownMenuItem> kategoriItems = [];
+                              if(!snapshot.hasData)
+                              {
+                                const CircularProgressIndicator();
+                              }
+                              else{
+                                final kategoriPemasukan = snapshot.data?.docs.reversed.toList();
+                                kategoriItems.add(const DropdownMenuItem(
+                                  value: "0",
+                                  child: Text('Pilih Kategori'),
+                                ),
+                                );
+                                for(var kategori in kategoriPemasukan!){
+                                  kategoriItems.add(DropdownMenuItem(
+                                      value: kategori.id,
+                                      child: Text(
+                                          kategori['kategori']
+                                      )
+                                  ),
+                                  );
+                                }
+                              }
+                              return DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                items: kategoriItems,
+                                onChanged: (kategoriValue){
+                                  setState(() {
+                                    SelectedKategori = kategoriValue;
+                                  });
+                                  print(kategoriValue);
+                                },
+                                value: SelectedKategori,
+                                isExpanded: true,
+                              );
+                            }),
                         ),
                         Expanded(
                           child: IconButton(
@@ -232,7 +284,10 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                             borderRadius: BorderRadius.circular(10),
                           ),
                           suffixIcon: Icon(Icons.calendar_month),
-                          labelText: "Pilih Tanggal"
+                          labelText: "Pilih Tanggal",
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                       ),
                       readOnly: true,
                       onTap: () async{
@@ -261,7 +316,10 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                             borderRadius: BorderRadius.circular(10),
                           ),
                           labelText: 'Catatan',
-                          hintText: 'Masukan Catatan'
+                          hintText: 'Masukan Catatan',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                       ),
                     ),
                   ),

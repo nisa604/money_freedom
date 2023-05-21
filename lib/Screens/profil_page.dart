@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'menu_button.dart';
+
 class profil_page extends StatelessWidget {
   const profil_page({Key? key}) : super(key: key);
 
@@ -8,10 +10,14 @@ class profil_page extends StatelessWidget {
       Scaffold(
         appBar: AppBar(
           title: const Text('Edit Profil'),
+          leading: BackButton(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context)=>MenuButton())),
+          ),
         ),
         body: Container(
           margin: const EdgeInsets.fromLTRB(15, 20, 15, 20),
-          height: 590,
+          height: 420,
           width: 385,
           decoration: BoxDecoration(
             color: Colors.grey.shade200,
@@ -37,20 +43,130 @@ class profil_page extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: (){
-                  settingOption(context, 'Ganti Avatar');
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Center(
+                        child: Container(
+                          width: 340,
+                          height: 360,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Pilih Avatar',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                              const SizedBox(height: 40),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/man (1).png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/man (2).png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/man (3).png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/man.png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: const [
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/woman (1).png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/woman (2).png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/woman (3).png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                  CircleAvatar(
+                                    backgroundImage: AssetImage('images/woman.png'),
+                                    radius: 30,
+                                    backgroundColor: Colors.transparent,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 40),
+                              Container(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Batal',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Konfirmasi',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                   backgroundColor: Colors.blue.shade300,
                 ),
-                  child: const Text("Ganti Avatar",
+                child: const Text(
+                  'Ganti Avatar',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.black54,
+                    color: Colors.black,
                   ),
-                  ),
+                ),
               ),
               Container(
                 width: 300,
@@ -65,6 +181,9 @@ class profil_page extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     labelText: 'Nama',
+                    labelStyle: const TextStyle(
+                      color: Colors.black,
+                    ),
                     // hintText: 'User'
                   ),
                 ),
@@ -79,7 +198,7 @@ class profil_page extends StatelessWidget {
                 child: const Text("Simpan",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.black54,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -103,7 +222,8 @@ class profil_page extends StatelessWidget {
             ),
             actions: [
               TextButton(onPressed: (){
-                Navigator.of(context).pop();
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context)=>const profil_page()));
               },
                   child: const Text("Close")
               )

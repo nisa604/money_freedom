@@ -7,6 +7,7 @@ import 'package:moneyfreedom/Screens/kategori_pengeluaran.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moneyfreedom/database/DataPengeluaranService.dart';
+import 'package:moneyfreedom/database/kategoriPengeluaran.dart';
 import 'create_transaction_pemasukan.dart';
 import 'menu_button.dart';
 
@@ -39,13 +40,16 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
   TextEditingController dateController = TextEditingController();
   TextEditingController _jumlahController = TextEditingController();
   TextEditingController _catatanController = TextEditingController();
+  TextEditingController _kategoriController = TextEditingController();
+
   final firebase_storage.Reference storageReference =
     firebase_storage.FirebaseStorage.instance.ref().child('nama_folder');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  
 
-  List<String> list = ['Makanan', 'Transportasi','Uang Kost'];
-  late String dropDownValue = list.first;
+  // List<String> list = ['Makanan', 'Transportasi','Uang Kost'];
+  // late String dropDownValue = list.first;
+  String SelectedKategori = "0";
+
   DataPengeluaranService _dataPengeluaranService = DataPengeluaranService();
 
   File? image;
@@ -79,9 +83,8 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
 
   void _saveDataToFirestore() async {
   // Mengambil inputan dari form
-  //   num jumlah = num.tryParse(_jumlahController.text) ?? 0;
     num jumlah = num.tryParse(_jumlahController.text.replaceAll(',', '')) ?? 0;
-    String kategori = dropDownValue;
+    String kategori = SelectedKategori;
     DateTime dateTime = DateTime.parse(dateController.text);
     Timestamp tanggal = Timestamp.fromDate(dateTime);
     String catatan = _catatanController.text;
@@ -116,6 +119,10 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         title: const Text('Transaksi'),
+        leading: BackButton(
+          onPressed: () => Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context)=>MenuButton())),
+        ),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -186,7 +193,10 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
                           borderRadius: BorderRadius.circular(10),
                         ),
                         labelText: 'Jumlah',
-                        hintText: 'Masukan Jumlah Uang'
+                        hintText: 'Masukan Jumlah Uang',
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -194,23 +204,48 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
                     margin: const EdgeInsets.fromLTRB(15, 20, 15, 20),
                     child: Row(
                       children: [
-                          Expanded(flex: 8,child: DropdownButtonFormField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            value: dropDownValue,
-                            items: list.map<DropdownMenuItem<String>>((String value){
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            hint: const Text('Kategori'),
-                            onChanged: (String? value){
-                            },
-                            ),
+                          Expanded(flex: 8,child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance.collection('KategoriPengeluaran').snapshots(),
+                            builder: (context, snapshot) {
+                              List<DropdownMenuItem> kategoriItems = [];
+                              if(!snapshot.hasData)
+                              {
+                                const CircularProgressIndicator();
+                              }
+                              else{
+                                  final kategoriPengeluaran = snapshot.data?.docs.reversed.toList();
+                                  kategoriItems.add(const DropdownMenuItem(
+                                    value: "0",
+                                    child: Text('Pilih Kategori'),
+                                    ),
+                                  );
+                                  for(var kategori in kategoriPengeluaran!){
+                                      kategoriItems.add(DropdownMenuItem(
+                                        value: kategori.id,
+                                        child: Text(
+                                                kategori['kategori']
+                                            )
+                                          ),
+                                      );
+                                  }
+                              }
+                              return DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                items: kategoriItems,
+                                onChanged: (kategoriValue){
+                                  setState(() {
+                                    SelectedKategori = kategoriValue;
+                                  });
+                                  print(kategoriValue);
+                                },
+                                value: SelectedKategori,
+                                isExpanded: true,
+                            );
+                            }),
                           ),
                         Expanded(
                           child: IconButton(
@@ -231,7 +266,10 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
                           borderRadius: BorderRadius.circular(10),
                         ),
                         suffixIcon: Icon(Icons.calendar_month),
-                        labelText: "Pilih Tanggal"
+                        labelText: "Pilih Tanggal",
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                       readOnly: true,
                       onTap: () async{
@@ -260,7 +298,10 @@ class _CreateTransactionPengeluaranState extends State<CreateTransactionPengelua
                             borderRadius: BorderRadius.circular(10),
                           ),
                           labelText: 'Catatan',
-                          hintText: 'Masukan Catatan'
+                          hintText: 'Masukan Catatan',
+                          labelStyle: const TextStyle(
+                            color: Colors.black,
+                          ),
                       ),
                     ),
                   ),

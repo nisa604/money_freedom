@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class KategoriPengeluaran {
   final String fotoKategoriOut;
   final String namaKategoriOut;
+  // final Timestamp tanggalDibuat;
   final Timestamp tanggalDibuat;
 
   KategoriPengeluaran({

@@ -17,7 +17,7 @@ class KategoriPemasukanService {
   }
 
   // Mendapatkan semua data pengeluaran dari Firebase Firestore
-  Stream<QuerySnapshot> get kategoriPengeluaranStream =>
+  Stream<QuerySnapshot> get KategoriPemasukanStream =>
       _kategori_pemasukanRef.snapshots();
 
   // Menghapus data pengeluaran dari Firebase Firestore
@@ -25,13 +25,4 @@ class KategoriPemasukanService {
     await _kategori_pemasukanRef.doc(kategoriPengeluaranId).delete();
   }
 
-  // Mengupdate data pengeluaran di Firebase Firestore
-  Future<void> updateKategoriPemasukan(String kategoriPengeluaranId, String fotoKategoriIn,
-      String namaKategoriIn, Timestamp tanggalDibuat) async {
-    await _kategori_pemasukanRef.doc(kategoriPengeluaranId).update({
-      'foto': fotoKategoriIn,
-      'kategori': namaKategoriIn,
-      'tanggal': tanggalDibuat,
-    });
-  }
 }
