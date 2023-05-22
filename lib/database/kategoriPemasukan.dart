@@ -13,8 +13,8 @@ class kategoriPemasukan {
 
   Map<String, dynamic> toJson() {
     return {
-      'fotoKategoriOut': fotoKategoriIn,
-      'namaKategoriOut': namaKategoriIn,
+      'fotoKategoriIn': fotoKategoriIn,
+      'namaKategoriIn': namaKategoriIn,
       'tanggalDibuat': tanggalDibuat,
     };
   }

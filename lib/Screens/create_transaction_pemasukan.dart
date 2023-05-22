@@ -14,7 +14,8 @@ class CreateTransactionPemasukan extends StatefulWidget {
   const CreateTransactionPemasukan({Key? key}) : super(key: key);
 
   @override
-  State<CreateTransactionPemasukan> createState() => _CreateTransactionPemasukanState();
+  State<CreateTransactionPemasukan> createState() =>
+      _CreateTransactionPemasukanState();
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {
@@ -34,14 +35,14 @@ class CurrencyInputFormatter extends TextInputFormatter {
   }
 }
 
-class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan> {
+class _CreateTransactionPemasukanState
+    extends State<CreateTransactionPemasukan> {
   TextEditingController dateController = TextEditingController();
   TextEditingController _jumlahController = TextEditingController();
   TextEditingController _catatanController = TextEditingController();
   final firebase_storage.Reference storageReference =
-  firebase_storage.FirebaseStorage.instance.ref().child('nama_folder');
+      firebase_storage.FirebaseStorage.instance.ref().child('nama_folder');
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
 
   List<String> list = ['Magang', 'Orang Tua'];
   late String dropDownValue = list.first;
@@ -51,16 +52,18 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
 
   File? image;
 
-  Future getImage() async{
+  Future getImage() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imagePicked = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? imagePicked =
+        await _picker.pickImage(source: ImageSource.gallery);
     image = File(imagePicked!.path);
     setState(() {});
   }
 
-  Future getCamera() async{
+  Future getCamera() async {
     final ImagePicker _picker = ImagePicker();
-    final XFile? imagePicked = await _picker.pickImage(source: ImageSource.camera);
+    final XFile? imagePicked =
+        await _picker.pickImage(source: ImageSource.camera);
     image = File(imagePicked!.path);
     setState(() {});
   }
@@ -68,7 +71,7 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
   Future<String?> uploadFile(File file) async {
     try {
       firebase_storage.TaskSnapshot taskSnapshot =
-      await storageReference.child('nama_file').putFile(file);
+          await storageReference.child('nama_file').putFile(file);
 
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
       return downloadUrl;
@@ -101,13 +104,12 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
     };
 
     // Menyimpan data ke Firestore
-    await _dataPemasukanService.tambahPemasukan(jumlah, kategori, tanggal, catatan, fotoUrl);
+    await _dataPemasukanService.tambahPemasukan(
+        jumlah, kategori, tanggal, catatan, fotoUrl);
   }
 
-
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
     dateController.text = "";
   }
@@ -121,7 +123,7 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
         title: const Text('Transaksi'),
         leading: BackButton(
           onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context)=>MenuButton())),
+              .push(MaterialPageRoute(builder: (context) => MenuButton())),
         ),
       ),
       body: Container(
@@ -138,16 +140,21 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context)=>const CreateTransactionPengeluaran()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              const CreateTransactionPengeluaran()));
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
-                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(5), topLeft: Radius.circular(5))),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(5),
+                              topLeft: Radius.circular(5))),
                       backgroundColor: Colors.grey.shade300,
                       minimumSize: const Size(185, 40),
                     ),
-                    child: const Text("pemasukan",
+                    child: const Text(
+                      "pemasukan",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -158,11 +165,13 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
                       backgroundColor: Colors.blue.shade500,
                       minimumSize: const Size(185, 40),
                     ),
-                    child: const Text("Pemasukan",
+                    child: const Text(
+                      "Pemasukan",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -189,14 +198,14 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                       ],
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          labelText: 'Jumlah',
-                          hintText: 'Masukan Jumlah Uang',
-                          labelStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: 'Jumlah',
+                        hintText: 'Masukan Jumlah Uang',
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -204,73 +213,61 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                     margin: const EdgeInsets.fromLTRB(15, 20, 15, 20),
                     child: Row(
                       children: [
-                        // Expanded(flex: 8,child: DropdownButtonFormField(
-                        //   decoration: InputDecoration(
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(10),
-                        //     ),
-                        //   ),
-                        //   value: dropDownValue,
-                        //   items: list.map<DropdownMenuItem<String>>((String value){
-                        //     return DropdownMenuItem<String>(
-                        //       value: value,
-                        //       child: Text(value),
-                        //     );
-                        //   }).toList(),
-                        //   hint: const Text('Kategori'),
-                        //   onChanged: (String? value){
-                        //   },
-                        // ),
-                        // ),
-                        Expanded(flex: 8,child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance.collection('KategoriPemasukan').snapshots(),
-                            builder: (context, snapshot) {
-                              List<DropdownMenuItem> kategoriItems = [];
-                              if(!snapshot.hasData)
-                              {
-                                const CircularProgressIndicator();
-                              }
-                              else{
-                                final kategoriPemasukan = snapshot.data?.docs.reversed.toList();
-                                kategoriItems.add(const DropdownMenuItem(
-                                  value: "0",
-                                  child: Text('Pilih Kategori'),
-                                ),
-                                );
-                                for(var kategori in kategoriPemasukan!){
-                                  kategoriItems.add(DropdownMenuItem(
-                                      value: kategori.id,
-                                      child: Text(
-                                          kategori['kategori']
-                                      )
-                                  ),
+                        Expanded(
+                          flex: 8,
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('KategoriPemasukan')
+                                  .snapshots(),
+                              builder: (context, snapshot) {
+                                List<DropdownMenuItem> kategoriItems = [];
+                                if (!snapshot.hasData) {
+                                  const CircularProgressIndicator();
+                                } else {
+                                  final kategoriPemasukan =
+                                      snapshot.data?.docs.reversed.toList();
+                                  kategoriItems.add(
+                                    const DropdownMenuItem(
+                                      value: "0",
+                                      child: Text('Pilih Kategori'),
+                                    ),
                                   );
+                                  for (var kategori in kategoriPemasukan!) {
+                                    kategoriItems.add(
+                                      DropdownMenuItem(
+                                          value: kategori.id,
+                                          child: Text(kategori['kategori'])),
+                                    );
+                                  }
                                 }
-                              }
-                              return DropdownButtonFormField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                return DropdownButtonFormField(
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
-                                ),
-                                items: kategoriItems,
-                                onChanged: (kategoriValue){
-                                  setState(() {
-                                    SelectedKategori = kategoriValue;
-                                  });
-                                  print(kategoriValue);
-                                },
-                                value: SelectedKategori,
-                                isExpanded: true,
-                              );
-                            }),
+                                  items: kategoriItems,
+                                  onChanged: (kategoriValue) {
+                                    setState(() {
+                                      SelectedKategori = kategoriValue;
+                                    });
+                                    print(kategoriValue);
+                                  },
+                                  value: SelectedKategori,
+                                  isExpanded: true,
+                                );
+                              }),
                         ),
                         Expanded(
                           child: IconButton(
-                              onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>const kategori_pemasukan())),
-                              icon: const Icon(Icons.create_outlined, size: 28,)
-                          ),
+                              onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const kategori_pemasukan())),
+                              icon: const Icon(
+                                Icons.create_outlined,
+                                size: 28,
+                              )),
                         ),
                       ],
                     ),
@@ -280,28 +277,30 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                     child: TextField(
                       controller: dateController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          suffixIcon: Icon(Icons.calendar_month),
-                          labelText: "Pilih Tanggal",
-                          labelStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        suffixIcon: Icon(Icons.calendar_month),
+                        labelText: "Pilih Tanggal",
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                       readOnly: true,
-                      onTap: () async{
-                        DateTime? pickedDate=await showDatePicker(context: context,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2101),
                         );
-                        if(pickedDate!=null){
-                          String formattedDate=DateFormat("yyyy-MM-dd").format(pickedDate);
-                          setState((){
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormat("yyyy-MM-dd").format(pickedDate);
+                          setState(() {
                             dateController.text = formattedDate.toString();
                           });
-                        }else{
+                        } else {
                           print("Belum Dipilih");
                         }
                       },
@@ -312,14 +311,14 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                     child: TextFormField(
                       controller: _catatanController,
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          labelText: 'Catatan',
-                          hintText: 'Masukan Catatan',
-                          labelStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: 'Catatan',
+                        hintText: 'Masukan Catatan',
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -328,66 +327,70 @@ class _CreateTransactionPemasukanState extends State<CreateTransactionPemasukan>
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    ),child: Row(
-                    children: [
-                      image != null ? SizedBox(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.file(image!, fit: BoxFit.cover)
-                      ) : Container(),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
-                              ),
-                              border: Border.all(
-                                  width: 1,color: Colors.black26)
-                          ),
-                          child: IconButton(
-                              onPressed: () async{
-                                await getImage();
-                              },
-                              icon:const Icon(Icons.crop_original_outlined, size: 30,)
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  bottomRight: Radius.circular(10)
-                              ),
-                              border: Border.all(
-                                  width: 1,color: Colors.black26)
-                          ),
-                          child: IconButton(
-                              onPressed: () async{
-                                await getCamera();
-                              },
-                              icon:const Icon(Icons.photo_camera, size: 28,)
+                    ),
+                    child: Row(
+                      children: [
+                        image != null
+                            ? SizedBox(
+                                height: 200,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.file(image!, fit: BoxFit.cover))
+                            : Container(),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)),
+                                border: Border.all(
+                                    width: 1, color: Colors.black26)),
+                            child: IconButton(
+                                onPressed: () async {
+                                  await getImage();
+                                },
+                                icon: const Icon(
+                                  Icons.crop_original_outlined,
+                                  size: 30,
+                                )),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: const BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                                border: Border.all(
+                                    width: 1, color: Colors.black26)),
+                            child: IconButton(
+                                onPressed: () async {
+                                  await getCamera();
+                                },
+                                icon: const Icon(
+                                  Icons.photo_camera,
+                                  size: 28,
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       _saveDataToFirestore();
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context)=>const MenuButton()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const MenuButton()));
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 40),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
                       backgroundColor: Colors.blue.shade500,
                     ),
-                    child: const Text("Simpan",
+                    child: const Text(
+                      "Simpan",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,

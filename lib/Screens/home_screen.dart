@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:moneyfreedom/database/DataPengeluaranService.dart';
 import 'package:moneyfreedom/database/DataPemasukanService.dart';
+import 'package:moneyfreedom/database/KategoriPengeluaranService.dart';
+import 'package:moneyfreedom/database/KategoriPemasukanService.dart';
 import 'create_transaction_pemasukan.dart';
 import 'create_transaction_pengeluaran.dart';
 
@@ -41,213 +43,298 @@ class _HomeScreenState extends State<HomeScreen> {
     return SingleChildScrollView(
       child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //button pasif income
-              Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 192, 192, 192
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: const Icon(
-                                  Icons.download,
-                                  color: Colors.green
-                              ),
-                            ),
-                            const SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text("Pemasukan"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
-                                SizedBox(height: 10),
-                                Text("Rp. 2.000.000"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Icon(Icons.upload, color: Colors.red),
-                            ),
-                            SizedBox(width: 15),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text("Pengeluaran"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
-                                SizedBox(height: 10),
-                                Text("Rp. 2.000.000"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
-                              ],
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  )),
-              //try row
-              Padding(
-                padding: const EdgeInsets.all(8),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //button pasif income
+          Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 192, 192, 192),
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: DropdownButton<String>(
-                          value: selectedItem,
-                          items: Bulan.map((month) => DropdownMenuItem<String>(
-                            value: month,
-                            child:
-                            Text(month, style: TextStyle(fontSize: 18)),
-                          )).toList(),
-                          onChanged: (Bulan) =>
-                              setState(() => selectedItem = Bulan),
-                          icon: const Icon(Icons.repeat)),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(8)),
+                          child:
+                              const Icon(Icons.download, color: Colors.green),
+                        ),
+                        const SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Pemasukan"),
+                            SizedBox(height: 10),
+                            StreamBuilder<int>(
+                              stream: DataPemasukanService()
+                                  .totalJumlahPemasukanStream,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<int> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text('Memuat...');
+                                }
+
+                                if (snapshot.hasError) {
+                                  return Text(
+                                      'Terjadi kesalahan saat memuat data');
+                                }
+
+                                final totalPengeluaran = snapshot.data ?? 0;
+                                final formattedTotal =
+                                    NumberFormat.decimalPattern('id_ID')
+                                        .format(totalPengeluaran);
+
+                                return Text('Rp. $formattedTotal');
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: DropdownButton<String>(
-                          onChanged: (Pilihan) => selected,
-                          // value: selected,
-                          items:
-                          Pilihan.map((pilih) => DropdownMenuItem<String>(
-                            value: pilih,
-                            child: Text(pilih),
-                          )).toList(),
-                          // onChanged: (Pilihan) =>
-                          //     setState(() => selected = Pilihan),
-                          icon: const Icon(Icons.tune)),
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Icon(Icons.upload, color: Colors.red),
+                        ),
+                        SizedBox(width: 15),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Pengeluaran"),
+                            SizedBox(height: 10),
+                            StreamBuilder<int>(
+                              stream: DataPengeluaranService()
+                                  .totalJumlahPengeluaranStream,
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<int> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text('Memuat...');
+                                }
+
+                                if (snapshot.hasError) {
+                                  return Text(
+                                      'Terjadi kesalahan saat memuat data');
+                                }
+
+                                final totalPengeluaran = snapshot.data ?? 0;
+                                final formattedTotal =
+                                    NumberFormat.decimalPattern('id_ID')
+                                        .format(totalPengeluaran);
+
+                                return Text('Rp. $formattedTotal');
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     )
                   ],
                 ),
-              ),
-              //list transaksi
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: DataPengeluaranService().dataPengeluaranStream,
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Terjadi kesalahan saat memuat data');
-                    }
-                    
-                    if (!snapshot.hasData) {
-                      return Text('Belum ada data pengeluaran');
-                    }
+              )),
+          //try row
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: DropdownButton<String>(
+                      value: selectedItem,
+                      items: Bulan.map((month) => DropdownMenuItem<String>(
+                            value: month,
+                            child: Text(month, style: TextStyle(fontSize: 18)),
+                          )).toList(),
+                      onChanged: (Bulan) =>
+                          setState(() => selectedItem = Bulan),
+                      icon: const Icon(Icons.repeat)),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: DropdownButton<String>(
+                      onChanged: (Pilihan) => selected,
+                      // value: selected,
+                      items: Pilihan.map((pilih) => DropdownMenuItem<String>(
+                            value: pilih,
+                            child: Text(pilih),
+                          )).toList(),
+                      // onChanged: (Pilihan) =>
+                      //     setState(() => selected = Pilihan),
+                      icon: const Icon(Icons.tune)),
+                )
+              ],
+            ),
+          ),
+          //list transaksi
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: DataPengeluaranService().dataPengeluaranStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Terjadi kesalahan saat memuat data');
+                }
 
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final pengeluaran = snapshot.data!.docs[index];
+                if (!snapshot.hasData) {
+                  return Text('Belum ada data pengeluaran');
+                }
 
-                        return Card(
-                          elevation: 10,
-                          child: ListTile(
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(onPressed: () async {
-                                  await _dataPengeluaranService.hapusPengeluaran(pengeluaran.id); // menghapus data dari Firestore
-                                  setState((){}); // memperbarui tampilan setelah data dihapus
-                                }, icon: Icon(Icons.delete)),
-                                IconButton(onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPengeluaran())),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final pengeluaran = snapshot.data!.docs[index];
+
+                    return Card(
+                      elevation: 10,
+                      child: ListTile(
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                                onPressed: () async {
+                                  await _dataPengeluaranService
+                                      .hapusPengeluaran(pengeluaran
+                                          .id); // menghapus data dari Firestore
+                                  setState(
+                                      () {}); // memperbarui tampilan setelah data dihapus
+                                },
+                                icon: Icon(Icons.delete)),
+                            IconButton(
+                                onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateTransactionPengeluaran())),
                                 icon: Icon(Icons.edit)),
-                              ],
-                            ),
-                            // title: Text("Rp ${pengeluaran['jumlah']}"),
-                              title: Text("Rp ${NumberFormat.decimalPattern('id_ID').format(pengeluaran['jumlah'])}"),
-                            subtitle: Text(pengeluaran['kategori']),
-                            leading: Container(
-                              child: Icon(Icons.upload, color: Colors.red),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                          ),
-                        );
-                      },
+                          ],
+                        ),
+                        // title: Text("Rp ${pengeluaran['jumlah']}"),
+                        title: Text(
+                            "Rp ${NumberFormat.decimalPattern('id_ID').format(pengeluaran['jumlah'])}"),
+                        subtitle: FutureBuilder<Object>(
+                          future: KategoriPengeluaranService()
+                              .getNamaKategoriPengeluaran(
+                                  pengeluaran['kategori']),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Object> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Text('Memuat...');
+                            }
+                            if (snapshot.hasError) {
+                              return Text('Terjadi kesalahan saat memuat data');
+                            }
+                            return Text(snapshot.data.toString());
+                          },
+                        ),
+                        leading: Container(
+                          child: Icon(Icons.upload, color: Colors.red),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
                     );
                   },
-                ),
-              ),
+                );
+              },
+            ),
+          ),
 
-              //list uang masuk
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: DataPemasukanService().dataPemasukanStream,
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Terjadi kesalahan saat memuat data');
-                    }
-                    
-                    if (!snapshot.hasData) {
-                      return Text('Belum ada data Pemasukan');
-                    }
+          //list uang masuk
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: DataPemasukanService().dataPemasukanStream,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Terjadi kesalahan saat memuat data');
+                }
 
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final Pemasukan = snapshot.data!.docs[index];
+                if (!snapshot.hasData) {
+                  return Text('Belum ada data Pemasukan');
+                }
 
-                        return Card(
-                          elevation: 10,
-                          child: ListTile(
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(onPressed: () async {
-                                  await _dataPemasukanService.hapusPemasukan(Pemasukan.id); // menghapus data dari Firestore
-                                  setState((){}); // memperbarui tampilan setelah data dihapus
-                                }, icon: Icon(Icons.delete)),
-                                IconButton(onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPemasukan())),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Pemasukan = snapshot.data!.docs[index];
+
+                    return Card(
+                      elevation: 10,
+                      child: ListTile(
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                                onPressed: () async {
+                                  await _dataPemasukanService.hapusPemasukan(
+                                      Pemasukan
+                                          .id); // menghapus data dari Firestore
+                                  setState(
+                                      () {}); // memperbarui tampilan setelah data dihapus
+                                },
+                                icon: Icon(Icons.delete)),
+                            IconButton(
+                                onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateTransactionPemasukan())),
                                 icon: Icon(Icons.edit)),
-                              ],
-                            ),
-                            // title: Text("Rp ${Pemasukan['jumlahPemasukan']}"),
-                            title: Text("Rp ${NumberFormat.decimalPattern('id_ID').format(Pemasukan['jumlahPemasukan'])}"),
-                            subtitle: Text(Pemasukan['kategoriPemasukan']),
-                            leading: Container(
-                              child: Icon(Icons.download, color: Colors.green),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                          ),
-                        );
-                      },
+                          ],
+                        ),
+                        // title: Text("Rp ${Pemasukan['jumlahPemasukan']}"),
+                        title: Text(
+                            "Rp ${NumberFormat.decimalPattern('id_ID').format(Pemasukan['jumlahPemasukan'])}"),
+                        subtitle: FutureBuilder<Object>(
+                          future: KategoriPemasukanService()
+                              .getNamaKategoriPemasukan(
+                                  Pemasukan['kategoriPemasukan']),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<Object> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Text('Memuat...');
+                            }
+                            if (snapshot.hasError) {
+                              return Text('Terjadi kesalahan saat memuat data');
+                            }
+                            return Text(snapshot.data.toString());
+                          },
+                        ),
+                        leading: Container(
+                          child: Icon(Icons.download, color: Colors.green),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
                     );
                   },
-                ),
-              ),
-            ],
-          )),
+                );
+              },
+            ),
+          ),
+        ],
+      )),
     );
   }
 }

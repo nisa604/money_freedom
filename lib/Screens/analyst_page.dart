@@ -50,15 +50,15 @@ class AnalystPage extends StatelessWidget {
             ),
           ),
           Column(
-<<<<<<< HEAD
-            children: [Container()],
-=======
-            children: <Widget>[
-              // Text('Column Child 1'),
-              // Text('Column Child 2'),
-            ],
->>>>>>> c9e552e705ad404072176e965466a2d7ca26522b
-          ),
+// <<<<<<< HEAD
+//             children: [Container()],
+// =======
+//             children: <Widget>[
+//               // Text('Column Child 1'),
+//               // Text('Column Child 2'),
+//             ],
+// >>>>>>> c9e552e705ad404072176e965466a2d7ca26522b
+              ),
         ],
       ),
     );
