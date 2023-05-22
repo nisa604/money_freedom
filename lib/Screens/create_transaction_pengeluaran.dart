@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneyfreedom/Screens/kategori_pengeluaran.dart';
@@ -53,35 +54,47 @@ class _CreateTransactionPengeluaranState
 
   DataPengeluaranService _dataPengeluaranService = DataPengeluaranService();
 
-  File? image;
+  ImagePicker imagePicker = ImagePicker();
 
-  Future getImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? imagePicked =
-        await _picker.pickImage(source: ImageSource.gallery);
-    image = File(imagePicked!.path);
-    setState(() {});
-  }
+  get image => null;
 
-  Future getCamera() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? imagePicked =
-        await _picker.pickImage(source: ImageSource.camera);
-    image = File(imagePicked!.path);
-    setState(() {});
-  }
+  Future<void> getImage() async {
+    final pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
 
-  Future<String?> uploadFile(File file) async {
-    try {
-      firebase_storage.TaskSnapshot taskSnapshot =
-          await storageReference.child('nama_file').putFile(file);
-
-      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-      return downloadUrl;
-    } catch (error) {
-      print(error);
-      return null;
+    if (pickedFile != null) {
+      // Upload foto ke Firebase Storage
+      await uploadImageToFirebase(pickedFile.path);
     }
+  }
+
+  Future<void> getCamera() async {
+    final pickedFile = await imagePicker.getImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      // Upload foto ke Firebase Storage
+      await uploadImageToFirebase(pickedFile.path);
+    }
+  }
+
+  FirebaseStorage storage = FirebaseStorage.instance;
+
+  Future<void> uploadImageToFirebase(String imagePath) async {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd-MM-yyyy_HH-mm-ss').format(
+        now); // Menggunakan format tanggal dengan tambahan jam, menit, dan detik
+
+    // Mendapatkan referensi storage di Firebase
+    Reference storageRef =
+        storage.ref().child('Pengeluaran').child(formattedDate + '.jpg');
+
+    // Mengunggah file ke Firebase Storage
+    UploadTask uploadTask = storageRef.putFile(File(imagePath));
+
+    // Mendapatkan URL download file setelah selesai diunggah
+    String downloadURL = await (await uploadTask).ref.getDownloadURL();
+
+    // Melakukan sesuatu dengan URL download, misalnya menyimpan ke database atau menampilkan di aplikasi
+    print('URL Download: $downloadURL');
   }
 
   void _saveDataToFirestore() async {
@@ -91,9 +104,9 @@ class _CreateTransactionPengeluaranState
     DateTime dateTime = DateTime.parse(dateController.text);
     Timestamp tanggal = Timestamp.fromDate(dateTime);
     String catatan = _catatanController.text;
-    String fotoUrl = "";
+    String foto = "";
     if (image != null) {
-      fotoUrl = await uploadFile(image!).toString();
+      foto = await uploadImageToFirebase(image!).toString();
     }
 
     // Membuat objek data pengeluaran
@@ -102,12 +115,12 @@ class _CreateTransactionPengeluaranState
       "kategori": kategori,
       "tanggal": tanggal,
       "catatan": catatan,
-      "fotoUrl": fotoUrl,
+      "foto": foto,
     };
 
     // Menyimpan data ke Firestore
     await _dataPengeluaranService.tambahPengeluaran(
-        jumlah, kategori, tanggal, catatan, fotoUrl);
+        jumlah, kategori, tanggal, catatan, foto);
   }
 
   @override

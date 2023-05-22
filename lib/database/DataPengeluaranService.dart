@@ -8,13 +8,13 @@ class DataPengeluaranService {
 
   // Menambahkan data pengeluaran baru ke Firebase Firestore
   Future<void> tambahPengeluaran(num jumlah, String kategori, Timestamp tanggal,
-      String catatan, String fotoUrl) async {
+      String catatan, String foto) async {
     await _pengeluaranRef.add({
       'jumlah': jumlah,
       'kategori': kategori,
       'tanggal': tanggal,
       'catatan': catatan,
-      'foto': fotoUrl,
+      'foto': foto,
     });
   }
 
@@ -41,20 +41,37 @@ class DataPengeluaranService {
     });
   }
 
+  Future<void> ambilTanggalPengeluaran(String pengeluaranId) async {
+    final DocumentSnapshot snapshot =
+        await _pengeluaranRef.doc(pengeluaranId).get();
+
+    if (snapshot.exists) {
+      final data = snapshot.data();
+      if (data is Map<String, dynamic>) {
+        final Timestamp tanggal = data['tanggal'] as Timestamp;
+        final DateTime dateTime = tanggal.toDate();
+        final int year = dateTime.year;
+        final int month = dateTime.month;
+        final int day = dateTime.day;
+        final String tanggalString = '$year-$month-$day';
+
+        // Lakukan apa pun yang ingin kamu lakukan dengan tanggalString
+        print(tanggalString);
+      }
+    } else {
+      print('Data pengeluaran tidak ditemukan.');
+    }
+  }
+
   // Mengupdate data pengeluaran di Firebase Firestore
-  Future<void> updatePengeluaran(
-      String pengeluaranId,
-      num jumlah,
-      String kategori,
-      Timestamp tanggal,
-      String catatan,
-      String fotoUrl) async {
+  Future<void> updatePengeluaran(String pengeluaranId, num jumlah,
+      String kategori, Timestamp tanggal, String catatan, String foto) async {
     await _pengeluaranRef.doc(pengeluaranId).update({
       'jumlah': jumlah,
       'kategori': kategori,
       'tanggal': tanggal,
       'catatan': catatan,
-      'foto': fotoUrl,
+      'foto': foto,
     });
   }
 }

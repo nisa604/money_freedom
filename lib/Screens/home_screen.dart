@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'November',
     'Desember'
   ];
-  String? selectedItem = 'Januari';
+  String? selectedItem = 'Mei';
   List<String> Pilihan = ['Harian', 'Bulanan', 'Tahunan', 'Custom'];
   String? selected = '';
 
@@ -158,8 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             value: month,
                             child: Text(month, style: TextStyle(fontSize: 18)),
                           )).toList(),
-                      onChanged: (Bulan) =>
-                          setState(() => selectedItem = Bulan),
+                      onChanged: (bulan) =>
+                          setState(() => selectedItem = bulan),
                       icon: const Icon(Icons.repeat)),
                 ),
                 Padding(

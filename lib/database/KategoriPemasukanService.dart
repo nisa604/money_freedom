@@ -16,9 +16,12 @@ class KategoriPemasukanService {
     });
   }
 
-  Future<Object> getNamaKategoriPemasukan(String KategoriPemasukanId) async {
+  Stream<QuerySnapshot> get KategoriPemasukanStream =>
+      _kategori_pemasukanRef.snapshots();
+
+  Future<Object> getNamaKategoriPemasukan(String kategoriPemasukanId) async {
     DocumentSnapshot snapshot =
-        await _kategori_pemasukanRef.doc(KategoriPemasukanId).get();
+        await _kategori_pemasukanRef.doc(kategoriPemasukanId).get();
     if (snapshot.exists) {
       String namaKategoriIn =
           (snapshot.data() as Map<String, dynamic>)['kategori'];
@@ -28,10 +31,6 @@ class KategoriPemasukanService {
       return Exception('Tidak Ditemukan');
     }
   }
-
-  // Mendapatkan semua data Pemasukan dari Firebase Firestore
-  Stream<QuerySnapshot> get KategoriPemasukanStream =>
-      _kategori_pemasukanRef.snapshots();
 
   // Menghapus data Pemasukan dari Firebase Firestore
   Future<void> hapusKategoriPemasukan(String kategoriPemasukanId) async {
