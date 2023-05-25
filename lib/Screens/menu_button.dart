@@ -1,9 +1,3 @@
-/**
- * @Author: Your name
- * @Date:   2023-04-04 11:24:59
- * @Last Modified by:   Your name
- * @Last Modified time: 2023-04-23 21:40:19
- */
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:moneyfreedom/Screens//analyst_page.dart';
@@ -21,7 +15,7 @@ class MenuButton extends StatefulWidget {
 class MenuButtonState extends State<MenuButton> {
   final List<Widget> _children = [
     HomeScreen(),
-    AnalystPage()
+    AnalystPage(),
   ]; // untuk pemanggilan button dibawah
   int currentIndex = 0;
 
@@ -67,19 +61,19 @@ class MenuButtonState extends State<MenuButton> {
           color: Colors.blue,
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            IconButton(
-                onPressed: () {
-                  ontaptapped(0);
-                },
-                icon: const Icon(Icons.home)),
-            const SizedBox(
-              width: 20,
-            ),
-            IconButton(
-                onPressed: () {
-                  ontaptapped(1);
-                },
-                icon: const Icon(Icons.bar_chart))
+                IconButton(
+                    onPressed: () {
+                      ontaptapped(0);
+                    },
+                    icon: const Icon(Icons.home)),
+                const SizedBox(
+                  width: 20,
+                ),
+                IconButton(
+                    onPressed: () {
+                      ontaptapped(1);
+                    },
+                    icon: const Icon(Icons.bar_chart))
           ]),
         ));
   }

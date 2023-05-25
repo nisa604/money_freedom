@@ -6,6 +6,23 @@ class KategoriPengeluaranService {
   final CollectionReference _kategori_pengeluaranRef =
   FirebaseFirestore.instance.collection('KategoriPengeluaran');
 
+  Stream<QuerySnapshot> get KategoriPengeluaranStream =>
+      _kategori_pengeluaranRef.snapshots();
+
+  Future<Object> getNamaKategoriPengeluaran(
+      String KategoriPengeluaranId) async {
+    DocumentSnapshot snapshot =
+    await _kategori_pengeluaranRef.doc(KategoriPengeluaranId).get();
+    if (snapshot.exists) {
+      String namaKategoriOut =
+      (snapshot.data() as Map<String, dynamic>)['kategori'];
+      return namaKategoriOut;
+    } else {
+      // Dokumen tidak ditemukan
+      return Exception('Tidak Ditemukan');
+    }
+  }
+
   // Menambahkan data pengeluaran baru ke Firebase Firestore
   Future<void> tambahKategoriPengeluaran(String fotoKategoriOut,
       String namaKategoriOut, Timestamp tanggalDibuat) async {
@@ -17,8 +34,8 @@ class KategoriPengeluaranService {
   }
 
   // Mendapatkan semua data pengeluaran dari Firebase Firestore
-  Stream<QuerySnapshot> get KategoriPengeluaranStream =>
-      _kategori_pengeluaranRef.snapshots();
+  // Stream<QuerySnapshot> get KategoriPengeluaranStream =>
+  //     _kategori_pengeluaranRef.snapshots();
 
   // Menghapus data pengeluaran dari Firebase Firestore
   Future<void> hapusKategoriPengeluaran(String KategoriPengeluaranId) async {
@@ -35,3 +52,4 @@ class KategoriPengeluaranService {
     });
   }
 }
+

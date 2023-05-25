@@ -11,11 +11,13 @@ class help_page extends StatelessWidget {
     body:SingleChildScrollView(
       child: Center(
         child: Container(
-          height: 800,
-          width: 390,
-          margin: const EdgeInsets.only(
-            top: 10,
-            bottom: 10,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(
+            top: MediaQuery.of(context).size.height * 0.01,
+            bottom: MediaQuery.of(context).size.height * 0.01,
+            right: MediaQuery.of(context).size.width * 0.02,
+            left: MediaQuery.of(context).size.width * 0.02,
           ),
           decoration: BoxDecoration(
             color: Colors.grey.shade200,

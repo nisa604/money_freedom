@@ -16,15 +16,16 @@ class profil_page extends StatelessWidget {
           ),
         ),
         body: Container(
-          margin: const EdgeInsets.fromLTRB(15, 20, 15, 20),
-          height: 420,
-          width: 385,
+          margin: EdgeInsets.fromLTRB(15, 20, 15, 20),
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             color: Colors.grey.shade200,
             borderRadius: BorderRadius.circular(16.0),
           ),
           child: Column(
             children: [
+              SizedBox(height:20),
               Container(
                 width: 100,
                 height: 100,
@@ -151,7 +152,6 @@ class profil_page extends StatelessWidget {
                       );
                     },
                   );
-
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -168,68 +168,92 @@ class profil_page extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                width: 300,
-                margin: const EdgeInsets.only(
-                  top: 25,
-                  bottom: 40,
-                ),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 15,
                     ),
-                    labelText: 'Nama',
-                    labelStyle: const TextStyle(
-                      color: Colors.black,
+                    margin: EdgeInsets.only(
+                      right: MediaQuery.of(context).size.width * 0.61,
                     ),
-                    // hintText: 'User'
+                    child: const Text(
+                      "Nama",
+                      style: TextStyle(
+                        fontSize: 16,
+                        // fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    width: 300,
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      bottom: 40,
+                    ),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white60,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        // hintText: 'User'
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: (){},
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 35, vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  backgroundColor: Colors.blue.shade500,
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 60
                 ),
-                child: const Text("Simpan",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed:  () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MenuButton())),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        backgroundColor: Colors.white,
+                      ),
+                      child: const Text("Batal",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    ElevatedButton(
+                      onPressed:  () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MenuButton())),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(horizontal: 35, vertical: 13),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        backgroundColor: Colors.blue.shade500,
+                      ),
+                      child: const Text("Simpan",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
       );
-}
-  GestureDetector settingOption(BuildContext context, String title){
-    return GestureDetector(
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context){
-          return AlertDialog(
-            title: Text(title),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text("Option 1"),
-                Text("Option 2"),
-              ],
-            ),
-            actions: [
-              TextButton(onPressed: (){
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context)=>const profil_page()));
-              },
-                  child: const Text("Close")
-              )
-            ],
-          );
-        });
-      },
-    );
 }

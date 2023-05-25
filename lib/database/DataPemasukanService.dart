@@ -4,6 +4,20 @@ class DataPemasukanService {
   final CollectionReference _pemasukanRef =
       FirebaseFirestore.instance.collection('dataPemasukan');
 
+  Stream<int> get totalJumlahPemasukanStream {
+    return _pemasukanRef.snapshots().map((querySnapshot) {
+      int total = 0;
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        if (data is Map<String, dynamic>) {
+          final jumlahPemasukan = data['jumlahPemasukan'] as int;
+          total += jumlahPemasukan;
+        }
+      }
+      return total;
+      });
+    }
+
   // Menambahkan data pemasukan baru ke Firebase Firestore
   Future<void> tambahPemasukan(
       num jumlahPemasukan,

@@ -1,66 +1,109 @@
-/**
- * @Author: Your name
- * @Date:   2023-04-04 11:24:59
- * @Last Modified by:   Your name
- * @Last Modified time: 2023-05-07 20:09:10
- */
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class AnalystPage extends StatelessWidget {
-  // const AnalystPage({super.key});
-
-  final dataMap = <String, double>{
-    "Flutter": 20,
-    "React Native": 20,
-    "Xamarin": 20,
-    "Ionic": 20,
-  };
+  AnalystPage({super.key});
+  final dataMap = <String, double>{'China': 11, 'Russia': 9, 'Germany': 10};
 
   final colorList = <Color>[
     Colors.greenAccent,
-    Colors.blueAccent,
-    Colors.cyanAccent,
-    Colors.deepPurpleAccent,
+    Colors.limeAccent,
+    Colors.redAccent,
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              child: SizedBox(
-                height: 13,
-                // // width: 100,
-                //padding: EdgeInsets.symmetric(horizontal: 15),
-                child: PieChart(
-                  dataMap: dataMap,
-                  chartType: ChartType.disc,
-                  baseChartColor: Colors.grey[100]!.withOpacity(0.5),
-                  colorList: colorList,
-                  chartValuesOptions: ChartValuesOptions(
-                    showChartValuesInPercentage: true,
+    return SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 400,
+              height: 40,
+              margin: const EdgeInsets.only(
+                bottom: 10,
+                top: 10,
+                left: 10,
+              ),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(5),
+                              topLeft: Radius.circular(5))),
+                      backgroundColor: Colors.grey.shade300,
+                      minimumSize: Size(
+                          MediaQuery.of(context).size.width * 0.47
+                          , 40
+                      ),
+                    ),
+                    child: const Text(
+                      "Pengeluaran",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                  totalValue: 100,
-                ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      backgroundColor: Colors.blue.shade500,
+                      minimumSize: Size(
+                          MediaQuery.of(context).size.width * 0.47,
+                          40)
+                      ,
+                    ),
+                    child: const Text(
+                      "Pemasukan",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-          Column(
-<<<<<<< HEAD
-            children: [Container()],
-=======
-            children: <Widget>[
-              // Text('Column Child 1'),
-              // Text('Column Child 2'),
-            ],
->>>>>>> c9e552e705ad404072176e965466a2d7ca26522b
-          ),
-        ],
-      ),
+            Container(
+              width:  MediaQuery.of(context).size.width * 0.93,
+              height: MediaQuery.of(context).size.height * 0.71,
+              child: AspectRatio(
+                aspectRatio: 1.0,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: PieChart(
+                    dataMap: dataMap,
+                    chartType: ChartType.disc,
+                    baseChartColor: Colors.black54.withOpacity(0.1),
+                    colorList: colorList,
+                    legendOptions: const LegendOptions(
+                      legendPosition: LegendPosition.bottom,
+                    ),
+                    chartValuesOptions: const ChartValuesOptions(
+                      showChartValuesInPercentage: true,
+                    ),
+                    totalValue: 100,
+                  ),
+                ),
+              ),
+            )
+          ],
+        )
     );
   }
 }
+

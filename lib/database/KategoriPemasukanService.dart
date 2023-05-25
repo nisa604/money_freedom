@@ -6,6 +6,19 @@ class KategoriPemasukanService {
   final CollectionReference _kategori_pemasukanRef =
   FirebaseFirestore.instance.collection('KategoriPemasukan');
 
+  Future<Object> getNamaKategoriPemasukan(String KategoriPemasukanId) async {
+    DocumentSnapshot snapshot =
+    await _kategori_pemasukanRef.doc(KategoriPemasukanId).get();
+    if (snapshot.exists) {
+      String namaKategoriIn =
+      (snapshot.data() as Map<String, dynamic>)['kategori'];
+      return namaKategoriIn;
+    } else {
+      // Dokumen tidak ditemukan
+      return Exception('Tidak Ditemukan');
+      }
+    }
+
   // Menambahkan data pengeluaran baru ke Firebase Firestore
   Future<void> tambahKategoriPemasukan(String fotoKategoriIn,
       String namaKategoriIn, Timestamp tanggalDibuat) async {

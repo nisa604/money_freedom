@@ -6,6 +6,20 @@ class DataPengeluaranService {
   final CollectionReference _pengeluaranRef =
       FirebaseFirestore.instance.collection('dataPengeluaran');
 
+  Stream<int> get totalJumlahPengeluaranStream {
+    return _pengeluaranRef.snapshots().map((querySnapshot) {
+      int total = 0;
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        if (data is Map<String, dynamic>) {
+          final jumlah = data['jumlah'] as int;
+          total += jumlah;
+        }
+      }
+      return total;
+      });
+    }
+
   // Menambahkan data pengeluaran baru ke Firebase Firestore
   Future<void> tambahPengeluaran(num jumlah, String kategori, Timestamp tanggal,
       String catatan, String fotoUrl) async {

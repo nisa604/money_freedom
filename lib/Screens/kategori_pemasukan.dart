@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:moneyfreedom/database/KategoriPemasukanService.dart';
 import 'create_transaction_pemasukan.dart';
-import 'create_transaction_pengeluaran.dart';
 
 class kategori_pemasukan extends StatefulWidget {
   const kategori_pemasukan({Key? key}) : super(key: key);

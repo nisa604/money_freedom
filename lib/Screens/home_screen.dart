@@ -4,6 +4,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:moneyfreedom/database/DataPengeluaranService.dart';
 import 'package:moneyfreedom/database/DataPemasukanService.dart';
+import 'package:moneyfreedom/database/KategoriPengeluaranService.dart';
+import 'package:moneyfreedom/database/KategoriPemasukanService.dart';
 import 'create_transaction_pemasukan.dart';
 import 'create_transaction_pengeluaran.dart';
 
@@ -50,8 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 192, 192, 192
-                      ),
+                      color: Color.fromARGB(255, 192, 192, 192),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -63,22 +64,40 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                   color: Colors.transparent,
                                   borderRadius: BorderRadius.circular(8)),
-                              child: const Icon(
-                                  Icons.download,
-                                  color: Colors.green
-                              ),
+                              child:
+                              const Icon(Icons.download, color: Colors.green),
                             ),
                             const SizedBox(width: 15),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text("Pemasukan"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
                                 SizedBox(height: 10),
-                                Text("Rp. 2.000.000"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
+                                StreamBuilder<int>(
+                                  stream: DataPemasukanService()
+                                      .totalJumlahPemasukanStream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<int> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text('Memuat...');
+                                    }
+
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                          'Terjadi kesalahan saat memuat data');
+                                    }
+
+                                    final totalPengeluaran = snapshot.data ?? 0;
+                                    final formattedTotal =
+                                    NumberFormat.decimalPattern('id_ID')
+                                        .format(totalPengeluaran);
+
+                                    return Text('Rp. $formattedTotal');
+                                  },
+                                ),
                               ],
-                            )
+                            ),
                           ],
                         ),
                         Row(
@@ -92,19 +111,40 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: 15),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text("Pengeluaran"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
                                 SizedBox(height: 10),
-                                Text("Rp. 2.000.000"),
-                                //style: GoogleFonts.montserrat(Color: colors.white, fontsize: 12 ),
+                                StreamBuilder<int>(
+                                  stream: DataPengeluaranService()
+                                      .totalJumlahPengeluaranStream,
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<int> snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Text('Memuat...');
+                                    }
+
+                                    if (snapshot.hasError) {
+                                      return const Text(
+                                          'Terjadi kesalahan saat memuat data');
+                                    }
+
+                                    final totalPengeluaran = snapshot.data ?? 0;
+                                    final formattedTotal =
+                                    NumberFormat.decimalPattern('id_ID')
+                                        .format(totalPengeluaran);
+
+                                    return Text('Rp. $formattedTotal');
+                                  },
+                                ),
                               ],
-                            )
+                            ),
                           ],
                         )
                       ],
                     ),
-                  )),
+                  )
+              ),
               //try row
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -117,20 +157,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: selectedItem,
                           items: Bulan.map((month) => DropdownMenuItem<String>(
                             value: month,
-                            child:
-                            Text(month, style: TextStyle(fontSize: 18)),
+                            child: Text(month, style: TextStyle(fontSize: 18)),
                           )).toList(),
                           onChanged: (Bulan) =>
                               setState(() => selectedItem = Bulan),
                           icon: const Icon(Icons.repeat)),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 15),
+                      padding: EdgeInsets.only(right: 15),
                       child: DropdownButton<String>(
                           onChanged: (Pilihan) => selected,
                           // value: selected,
-                          items:
-                          Pilihan.map((pilih) => DropdownMenuItem<String>(
+                          items: Pilihan.map((pilih) => DropdownMenuItem<String>(
                             value: pilih,
                             child: Text(pilih),
                           )).toList(),
@@ -146,18 +184,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: StreamBuilder<QuerySnapshot>(
                   stream: DataPengeluaranService().dataPengeluaranStream,
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
                       return Text('Terjadi kesalahan saat memuat data');
                     }
-                    
+
                     if (!snapshot.hasData) {
                       return Text('Belum ada data pengeluaran');
                     }
 
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (BuildContext context, int index) {
                         final pengeluaran = snapshot.data!.docs[index];
@@ -168,18 +207,63 @@ class _HomeScreenState extends State<HomeScreen> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                IconButton(onPressed: () async {
-                                  await _dataPengeluaranService.hapusPengeluaran(pengeluaran.id); // menghapus data dari Firestore
-                                  setState((){}); // memperbarui tampilan setelah data dihapus
-                                }, icon: Icon(Icons.delete)),
-                                IconButton(onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPengeluaran())),
-                                icon: Icon(Icons.edit)),
+                                IconButton(
+                                  onPressed: () async {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Konfirmasi'),
+                                          content: Text('Apakah Anda yakin ingin menghapus data ini?'),
+                                          actions: [
+                                            TextButton(
+                                              child: Text('Batal'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(); // Menutup dialog
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text('Hapus'),
+                                              onPressed: () async {
+                                                await _dataPengeluaranService.hapusPengeluaran(pengeluaran.id);
+                                                setState(() {}); // Memperbarui tampilan setelah data dihapus
+                                                Navigator.of(context).pop(); // Menutup dialog
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: Icon(Icons.delete),
+                                ),
+                                IconButton(
+                                    onPressed: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CreateTransactionPengeluaran())),
+                                    icon: Icon(Icons.edit)),
                               ],
                             ),
                             // title: Text("Rp ${pengeluaran['jumlah']}"),
-                              title: Text("Rp ${NumberFormat.decimalPattern('id_ID').format(pengeluaran['jumlah'])}"),
-                            subtitle: Text(pengeluaran['kategori']),
+                            title: Text(
+                                "Rp ${NumberFormat.decimalPattern('id_ID').format(pengeluaran['jumlah'])}"),
+                            subtitle: FutureBuilder<Object>(
+                              future: KategoriPengeluaranService()
+                                  .getNamaKategoriPengeluaran(
+                                  pengeluaran['kategori']),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<Object> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text('Memuat...');
+                                }
+                                if (snapshot.hasError) {
+                                  return Text('Terjadi kesalahan saat memuat data');
+                                }
+                                return Text(snapshot.data.toString());
+                              },
+                            ),
                             leading: Container(
                               child: Icon(Icons.upload, color: Colors.red),
                               decoration: BoxDecoration(
@@ -199,11 +283,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: StreamBuilder<QuerySnapshot>(
                   stream: DataPemasukanService().dataPemasukanStream,
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
                       return Text('Terjadi kesalahan saat memuat data');
                     }
-                    
+
                     if (!snapshot.hasData) {
                       return Text('Belum ada data Pemasukan');
                     }
@@ -221,18 +306,73 @@ class _HomeScreenState extends State<HomeScreen> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                IconButton(onPressed: () async {
-                                  await _dataPemasukanService.hapusPemasukan(Pemasukan.id); // menghapus data dari Firestore
-                                  setState((){}); // memperbarui tampilan setelah data dihapus
-                                }, icon: Icon(Icons.delete)),
-                                IconButton(onPressed: () => Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context)=>CreateTransactionPemasukan())),
-                                icon: Icon(Icons.edit)),
+                                IconButton(
+                                  onPressed: () async {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Konfirmasi'),
+                                          content: Text('Apakah Anda yakin ingin menghapus data ini?'),
+                                          actions: [
+                                            TextButton(
+                                              child: Text('Batal'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(); // Menutup dialog
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text('Hapus'),
+                                              onPressed: () async {
+                                                await _dataPemasukanService.hapusPemasukan(Pemasukan.id);
+                                                setState(() {}); // Memperbarui tampilan setelah data dihapus
+                                                Navigator.of(context).pop(); // Menutup dialog
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: Icon(Icons.delete),
+                                ),
+
+                                // IconButton(
+                                //     onPressed: () async {
+                                //       await _dataPemasukanService.hapusPemasukan(
+                                //           Pemasukan
+                                //               .id); // menghapus data dari Firestore
+                                //       setState(
+                                //               () {}); // memperbarui tampilan setelah data dihapus
+                                //     },
+                                //     icon: Icon(Icons.delete)),
+                                IconButton(
+                                    onPressed: () => Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CreateTransactionPemasukan())),
+                                    icon: Icon(Icons.edit)),
                               ],
                             ),
                             // title: Text("Rp ${Pemasukan['jumlahPemasukan']}"),
-                            title: Text("Rp ${NumberFormat.decimalPattern('id_ID').format(Pemasukan['jumlahPemasukan'])}"),
-                            subtitle: Text(Pemasukan['kategoriPemasukan']),
+                            title: Text(
+                                "Rp ${NumberFormat.decimalPattern('id_ID').format(Pemasukan['jumlahPemasukan'])}"),
+                            subtitle: FutureBuilder<Object>(
+                              future: KategoriPemasukanService()
+                                  .getNamaKategoriPemasukan(
+                                  Pemasukan['kategoriPemasukan']),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<Object> snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text('Memuat...');
+                                }
+                                if (snapshot.hasError) {
+                                  return Text('Terjadi kesalahan saat memuat data');
+                                }
+                                return Text(snapshot.data.toString());
+                              },
+                            ),
                             leading: Container(
                               child: Icon(Icons.download, color: Colors.green),
                               decoration: BoxDecoration(
@@ -247,7 +387,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ],
-          )),
+          )
+      ),
     );
   }
 }
+
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'menu_button.dart';
 import 'register.dart';
 
 class Splash_Page extends StatefulWidget {
@@ -18,8 +17,8 @@ class _Splash_PageState extends State<Splash_Page> {
 
   _navigatetohome()async{
     await Future.delayed(Duration(seconds: 2),(){});
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>register()));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MenuButton()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>register()));
+    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MenuButton()));
   }
 
   @override

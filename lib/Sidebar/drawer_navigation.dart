@@ -4,12 +4,16 @@ import 'package:moneyfreedom/Screens/help_page.dart';
 import 'package:moneyfreedom/Screens/setting_page.dart';
 import 'package:moneyfreedom/Screens/profil_page.dart';
 
+import '../database/profilService.dart';
+
 class DrawerNavigation extends StatefulWidget {
   const DrawerNavigation({Key? key, required double width}) : super(key: key);
 
   @override
   State<DrawerNavigation> createState() => _DrawerNavigationState();
 }
+
+final ProfilService _profilService = ProfilService();
 
 class _DrawerNavigationState extends State<DrawerNavigation> {
   @override
