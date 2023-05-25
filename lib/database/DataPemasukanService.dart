@@ -35,20 +35,6 @@ class DataPemasukanService {
     });
   }
 
-  Stream<int> get totalJumlahPemasukanStream {
-    return _pemasukanRef.snapshots().map((querySnapshot) {
-      int total = 0;
-      for (var doc in querySnapshot.docs) {
-        final data = doc.data();
-        if (data is Map<String, dynamic>) {
-          final jumlahPemasukan = data['jumlahPemasukan'] as int;
-          total += jumlahPemasukan;
-        }
-      }
-      return total;
-    });
-  }
-
   // Mendapatkan semua data pemasukan dari Firebase Firestore
   Stream<QuerySnapshot> get dataPemasukanStream => _pemasukanRef.snapshots();
 

@@ -37,7 +37,7 @@ class KategoriPengeluaranService {
   // Stream<QuerySnapshot> get KategoriPengeluaranStream =>
   //     _kategori_pengeluaranRef.snapshots();
 
-  Future<Object> getNamaKategoriPengeluaran(
+  Future<Object> getKategoriPengeluaran(
       String KategoriPengeluaranId) async {
     DocumentSnapshot snapshot =
         await _kategori_pengeluaranRef.doc(KategoriPengeluaranId).get();

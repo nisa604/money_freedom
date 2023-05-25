@@ -41,20 +41,6 @@ class DataPengeluaranService {
     await _pengeluaranRef.doc(pengeluaranId).delete();
   }
 
-  Stream<int> get totalJumlahPengeluaranStream {
-    return _pengeluaranRef.snapshots().map((querySnapshot) {
-      int total = 0;
-      for (var doc in querySnapshot.docs) {
-        final data = doc.data();
-        if (data is Map<String, dynamic>) {
-          final jumlah = data['jumlah'] as int;
-          total += jumlah;
-        }
-      }
-      return total;
-    });
-  }
-
   Future<void> ambilTanggalPengeluaran(String pengeluaranId) async {
     final DocumentSnapshot snapshot =
         await _pengeluaranRef.doc(pengeluaranId).get();
